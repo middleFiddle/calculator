@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  font-family: monospace;
+}
+
+$inputs: "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero", "decimal", "clear";
+
+$operators: "add", "subtract", "multiply", "divide", "equals";
+
+.display {
+  background-color: aquamarine;
+  grid-column: 1/4;
+  align-self: stretch;
+}
+
+
+@each $input in $inputs {
+  .#{$input} {
+    grid-area: #{$input};
+  }
+}
+
+@each $operator in $operators {
+  .#{$operator} {
+    grid-area: #{$operator};
+  }
+}
+
+button {
+  width: 100%;
+  height: 70px;
+}
+
+.container {
+  width: 50%;
+  min-height: 350px;
+  margin: auto;
+  padding-top: 5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-template-areas:
+    "display display display divide"
+    "one two three multiply"
+    "four five six subtract"
+    "seven eight nine add"
+    "zero decimal clear equals"
+  ;
+}
