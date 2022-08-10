@@ -7,7 +7,7 @@ $inputs: "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 
 $operators: "add", "subtract", "multiply", "divide", "equals";
 
-.display {
+#display {
   background-color: aquamarine;
   grid-column: 1/4;
   align-self: stretch;
