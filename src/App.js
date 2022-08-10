@@ -16,8 +16,29 @@ const compute = (p, c, op) => {
       return `${prev / curr}`
 
     default:
-      break;
+
   }
+}
+
+const operatorMap = (str) => {
+  let result;
+  // eslint-disable-next-line default-case
+  switch (str) {
+    case "add": result = "+"
+      break
+    case "subtract": result = "-"
+      break
+    case "multiply": result = "*"
+      break
+    case "divide": result = "/"
+      break
+    case "equals": result = "="
+      break
+    case "clear": result = "C"
+      break
+    default:
+  }
+  return result
 }
 
 const Display = ({ display }) => {
@@ -41,25 +62,6 @@ const Button = ({ id, handleInput, value, handleOperator, isInput }) => {
   )
 }
 
-const operatorMap = (str) => {
-  let result;
-  // eslint-disable-next-line default-case
-  switch (str) {
-    case "add": result = "+"
-      break
-    case "subtract": result = "-"
-      break
-    case "multiply": result = "*"
-      break
-    case "divide": result = "/"
-      break
-    case "equals": result = "="
-      break
-    case "clear": result = "C"
-      break
-  }
-  return result
-}
 
 const App = () => {
   const [prevInput, setPrevInput] = useState('0')
@@ -70,12 +72,12 @@ const App = () => {
   // use enums for state variable?
   const operators = ["add", "subtract", "multiply", "divide", "equals", "clear"]
   const inputs = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "decimal"]
-  //console.log(prevInput, activeOp, display)
+
 
   const handleInput = (e) => {
-    setPrevInput(display)
 
     if (display === '0' || opLast) {
+      setPrevInput(display)
       setOpLast(false)
       setDisplay(e.target.innerText)
       return
