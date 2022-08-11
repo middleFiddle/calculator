@@ -68,6 +68,7 @@ const App = () => {
   const [activeOp, setActiveOp] = useState('')
   const [display, setDisplay] = useState('0')
   const [opLast, setOpLast] = useState(false)
+  const [decimal, setDecimal] = useState(false)
 
   // use enums for state variable?
   const operators = ["add", "subtract", "multiply", "divide", "equals", "clear"]
@@ -75,6 +76,13 @@ const App = () => {
 
 
   const handleInput = (e) => {
+    if (decimal && e.target.id === "decimal") {
+      return
+    }
+
+    if (e.target.id === "decimal") {
+      setDecimal(true)
+    }
 
     if (display === '0' || opLast) {
       setPrevInput(display)
@@ -90,7 +98,7 @@ const App = () => {
 
 
   const handleOperator = (e) => {
-
+    setDecimal(false)
 
     setOpLast(true)
 
@@ -100,6 +108,7 @@ const App = () => {
       setPrevInput('0')
       setActiveOp('')
       setOpLast(false)
+      setDecimal(false)
       return
     }
 
