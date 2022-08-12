@@ -98,10 +98,6 @@ const App = () => {
 
 
   const handleOperator = (e) => {
-    setDecimal(false)
-
-    setOpLast(true)
-
     if (e.target.id === "clear") {
       console.log("clear")
       setDisplay('0')
@@ -111,6 +107,16 @@ const App = () => {
       setDecimal(false)
       return
     }
+
+    setDecimal(false)
+
+    if (opLast) {
+      setActiveOp(e.target.id)
+      return
+    }
+
+    setOpLast(true)
+
 
     setActiveOp(e.target.id)
 
@@ -124,7 +130,7 @@ const App = () => {
 
     if (activeOp !== '') {
       setPrevInput(prevInput => compute(prevInput, display, activeOp))
-      setDisplay(display => compute(prevInput, display, activeOp))
+      //setDisplay(display => compute(prevInput, display, activeOp))
       return
     }
 
@@ -144,7 +150,7 @@ const App = () => {
     return elements
   }
 
-  console.log([prevInput, activeOp, display])
+  console.log(prevInput, activeOp, display)
   console.log(typeof prevInput, typeof activeOp, typeof display)
 
   return (
