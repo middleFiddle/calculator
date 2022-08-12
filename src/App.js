@@ -107,6 +107,16 @@ const App = () => {
       setDecimal(false)
       return
     }
+    if (e.target.id === "equals") {
+      setPrevInput('0')
+      if (activeOp !== '') {
+
+        setDisplay(compute(prevInput, display, activeOp))
+      }
+
+      setActiveOp('')
+      return
+    }
 
     setDecimal(false)
 
@@ -120,13 +130,6 @@ const App = () => {
 
     setActiveOp(e.target.id)
 
-    if (e.target.id === "equals") {
-      setPrevInput('0')
-      setDisplay(compute(prevInput, display, activeOp))
-
-      setActiveOp('')
-      return
-    }
 
     if (activeOp !== '') {
       setPrevInput(prevInput => compute(prevInput, display, activeOp))
