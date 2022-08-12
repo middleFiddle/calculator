@@ -44,9 +44,9 @@ const operatorMap = (str) => {
 const Display = ({ display }) => {
   return (
 
-    <div id="display">
+    <h1 id="display">
       {display}
-    </div>
+    </h1>
   )
 }
 
@@ -55,7 +55,7 @@ const Button = ({ id, handleInput, value, handleOperator, isInput }) => {
 
 
     <div className={id}>
-      <button type="button" id={id} onClick={isInput ? handleInput : handleOperator}>{value}</button>
+      <button type="button" id={id} onClick={isInput ? handleInput : handleOperator} >{value}</button>
     </div>
 
 

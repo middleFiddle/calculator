@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: monospace;
+  font-size: 24px;
 }
 
 $inputs: "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero", "decimal", "clear";
@@ -8,6 +9,7 @@ $inputs: "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 $operators: "add", "subtract", "multiply", "divide", "equals";
 
 #display {
+  margin: 0;
   background-color: aquamarine;
   grid-column: 1/4;
   align-self: stretch;
@@ -29,6 +31,7 @@ $operators: "add", "subtract", "multiply", "divide", "equals";
 button {
   width: 100%;
   height: 70px;
+  font-size: x-large;
 }
 
 .container {
