@@ -40,10 +40,10 @@ button {
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;
   grid-template-areas:
-    "display display display equals"
+    "display display display clear"
     "one two three multiply"
     "four five six subtract"
     "seven eight nine add"
-    "zero decimal clear divide"
+    "zero decimal equals divide"
   ;
 }
