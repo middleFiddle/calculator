@@ -1,9 +1,9 @@
-import { useState } from "react"
-import { nanoid } from "nanoid"
+import React from "react"
+
 
 const compute = (p, c, op) => {
   const [prev, curr] = [Number(p), Number(c)]
-  console.log(prev, curr)
+  console.log(prev, curr, op)
   switch (op) {
     case "add":
       return `${prev + curr}`
@@ -14,6 +14,8 @@ const compute = (p, c, op) => {
       return `${prev * curr}`
     case "divide":
       return `${prev / curr}`
+    case "equals":
+      return `${prev}`
 
     default:
 
@@ -59,110 +61,166 @@ const Button = ({ id, handleInput, value, handleOperator, isInput }) => {
     </div>
 
 
-  )
+)
 }
 
 
-const App = () => {
-  const [prevInput, setPrevInput] = useState('0')
-  const [activeOp, setActiveOp] = useState('')
-  const [display, setDisplay] = useState('0')
-  const [opLast, setOpLast] = useState(false)
-  const [decimal, setDecimal] = useState(false)
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      prevInput: "0",
+      activeOp: '',
+      display: '0',
+      opLast: false,
+      decimal: false,
+    }
+    this.handleInput = this.handleInput.bind(this)
+    this.handleOperator = this.handleOperator.bind(this)
+  }
+
+  
 
   // use enums for state variable?
-  const operators = ["add", "subtract", "multiply", "divide", "equals", "clear"]
-  const inputs = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "decimal"]
+  operators = ["add", "subtract", "multiply", "divide", "equals", "clear"]
+  inputs = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "decimal"]
 
 
-  const handleInput = (e) => {
-    if (decimal && e.target.id === "decimal") {
+   handleInput = (e) => {
+     console.log(this.state.prevInput,this.state.display,this.state.activeOp)
+    console.log(e.target.id)
+    if (this.state.decimal && e.target.id === "decimal") {
       return
     }
 
     if (e.target.id === "decimal") {
-      setDecimal(true)
+      //setDecimal(true)
+      this.setState({
+        ...this.state,
+        decimal: true,
+      })
     }
 
-    if (display === '0' || opLast) {
-      setPrevInput(display)
+    if (this.state.display === '0' || this.state.opLast) {
+/*       setPrevInput(display)
       setOpLast(false)
-      setDisplay(e.target.innerText)
+      setDisplay(e.target.innerText) */
+
+      this.setState({
+        ...this.state,
+        display: e.target.innerText,
+        opLast: false,
+      })
       return
     }
-
-    setOpLast(false)
-    setDisplay(prev => prev + e.target.innerText)
-
+    
+    this.setState(prevState => ({
+      ...prevState,
+      display: prevState.display + e.target.innerText
+    })
+    )
+    
+    
+    
+    
   }
+  
+  
+  handleOperator = (e) => {
+    if (this.state.opLast) {
+      this.setState({
+        ...this.state,
+        activeOp: e.target.id
+      })
+      return
+    }
 
+    if (e.target.id === "subtract" && this.state.opLast) {
+      this.setState({
+        ...this.State,
+        display: "-", 
+      })
+    }
 
-  const handleOperator = (e) => {
     if (e.target.id === "clear") {
-      console.log("clear")
-      setDisplay('0')
-      setPrevInput('0')
-      setActiveOp('')
-      setOpLast(false)
-      setDecimal(false)
+      this.setState({
+        ...this.state, 
+        display:'0',
+        prevInput: '0',
+        activeOp: '',
+        opLast: false,
+        decimal: false,
+      })
+
       return
     }
+    
     if (e.target.id === "equals") {
-      setPrevInput('0')
-      if (activeOp !== '') {
+      
+      
+      this.setState(prevState =>({
+        ...prevState,
+        prevInput: "0",
+        display: compute(prevState.prevInput, prevState.display,prevState.activeOp),
 
-        setDisplay(compute(prevInput, display, activeOp))
-      }
-
-      setActiveOp('')
+      
+      
+    }))
+      
+      
       return
     }
 
-    setDecimal(false)
-
-    if (opLast) {
-      setActiveOp(e.target.id)
+    if (this.state.prevInput !== '0') {
+      this.setState({
+        ...this.state,
+        prevInput: compute(this.state.prevInput, this.state.display, this.state.activeOp),
+        display: '0',
+        activeOp: e.target.id,
+        decimal: false,
+      })
       return
     }
+    
+    
+    this.setState({
+      ...this.state,
+      prevInput: this.state.display,
+      opLast: true,
+      decimal: false,
+      activeOp: e.target.id,
+    })
 
-    setOpLast(true)
 
 
-    setActiveOp(e.target.id)
-
-
-    if (activeOp !== '') {
-      setPrevInput(prevInput => compute(prevInput, display, activeOp))
       //setDisplay(display => compute(prevInput, display, activeOp))
       return
     }
 
+    
+    
+    
 
-  }
 
-
-
-  const buttonMaker = (arrId, type) => {
+  buttonMaker = (arrId, type) => {
     const isInput = type === "inputs";
     const elements = arrId.map((s, i) => {
 
       return (
-        <Button id={s} value={isInput ? (i === 10 ? "." : i) : operatorMap(s)} handleInput={handleInput} handleOperator={handleOperator} isInput={isInput} key={nanoid()} />
+        <Button id={s} value={isInput ? (i === 10 ? "." : i) : operatorMap(s)} handleInput={this.handleInput} handleOperator={this.handleOperator} isInput={isInput} key={s} />
       )
     })
     return elements
   }
 
-  console.log(prevInput, activeOp, display)
-  console.log(typeof prevInput, typeof activeOp, typeof display)
 
-  return (
+  render() {return (
     <div className="container">
-      <Display display={display} />
-      {buttonMaker(inputs, "inputs")}
-      {buttonMaker(operators, "operators")}
+      <Display display={this.state.display} />
+      {this.buttonMaker(this.inputs, "inputs")}
+      {this.buttonMaker(this.operators, "operators")}
     </div >
-  );
+  );}
 }
 
 export default App;
