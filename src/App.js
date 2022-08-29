@@ -74,6 +74,7 @@ class App extends React.Component {
       display: '0',
       opLast: false,
       decimal: false,
+      negative: false,
     }
     this.handleInput = this.handleInput.bind(this)
     this.handleOperator = this.handleOperator.bind(this)
@@ -87,12 +88,11 @@ class App extends React.Component {
 
 
    handleInput = (e) => {
-     console.log(this.state.prevInput,this.state.display,this.state.activeOp)
-    console.log(e.target.id)
+    // decimals can only be put onto display once
     if (this.state.decimal && e.target.id === "decimal") {
       return
-    }
-
+    } 
+    // we hold decimal true in state after first use
     if (e.target.id === "decimal") {
       //setDecimal(true)
       this.setState({
@@ -101,11 +101,9 @@ class App extends React.Component {
       })
     }
 
+// if the display is zeroed out, and the calculator is ready for Inputs, '0' will be replaced
     if (this.state.display === '0' || this.state.opLast) {
-/*       setPrevInput(display)
-      setOpLast(false)
-      setDisplay(e.target.innerText) */
-
+      
       this.setState({
         ...this.state,
         display: e.target.innerText,
@@ -113,35 +111,22 @@ class App extends React.Component {
       })
       return
     }
-    
+//  otherwise, new inputs are concatenated to the previous display    
     this.setState(prevState => ({
       ...prevState,
-      display: prevState.display + e.target.innerText
+      display: prevState.display + e.target.innerText,
+      opLast: false,
+    
     })
     )
     
     
     
-    
+    return
   }
   
   
   handleOperator = (e) => {
-    if (this.state.opLast) {
-      this.setState({
-        ...this.state,
-        activeOp: e.target.id
-      })
-      return
-    }
-
-    if (e.target.id === "subtract" && this.state.opLast) {
-      this.setState({
-        ...this.State,
-        display: "-", 
-      })
-    }
-
     if (e.target.id === "clear") {
       this.setState({
         ...this.state, 
@@ -150,10 +135,25 @@ class App extends React.Component {
         activeOp: '',
         opLast: false,
         decimal: false,
+        setNegative: false
       })
 
       return
     }
+    if (this.state.opLast && e.target.id !== "subtract") {
+      this.setState({
+        ...this.state,
+        activeOp: e.target.id
+      })
+      return
+    }
+
+    if (e.target.id === "subtract" && this.state.opLast) {
+      this.handleInput(e)
+      
+      return
+    }
+
     
     if (e.target.id === "equals") {
       
@@ -162,6 +162,7 @@ class App extends React.Component {
         ...prevState,
         prevInput: "0",
         display: compute(prevState.prevInput, prevState.display,prevState.activeOp),
+        activeOp: '',
 
       
       
@@ -171,24 +172,33 @@ class App extends React.Component {
       return
     }
 
-    if (this.state.prevInput !== '0') {
-      this.setState({
-        ...this.state,
-        prevInput: compute(this.state.prevInput, this.state.display, this.state.activeOp),
-        display: '0',
+    if (this.state.display === '-') {
+      this.setState(prev =>({
+        ...prev,
+        display: prev.prevInput,
         activeOp: e.target.id,
-        decimal: false,
-      })
+        opLast: true,
+      }))
       return
     }
-    
-    
+
+    if (this.state.activeOp) {
+      this.setState(prev => ({
+        ...prev,
+        prevInput: compute(prev.prevInput, prev.display, prev.activeOp),
+        display: '0',
+        activeOp: e.target.id
+      }))
+      return
+    } 
+
     this.setState({
       ...this.state,
       prevInput: this.state.display,
       opLast: true,
       decimal: false,
       activeOp: e.target.id,
+      setNegative: false
     })
 
 
